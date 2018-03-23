@@ -1,6 +1,18 @@
 from rest_framework import serializers
 
-from .models import Reg02Maininfo, Reg01Lkpmaindistrict
+from .models import Reg02Maininfo, Reg01Lkpmaindistrict, Reg04Maininfo
+
+
+class Reg04MaininfoSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Reg04Maininfo
+        fields = '__all__'
+        extra_kwargs = {
+            'url': {
+                'view_name': 'animalregistration-detail',
+                'lookup_field': 'hh'
+            }
+        }
 
 
 class Reg02MaininfoSerializer(serializers.HyperlinkedModelSerializer):
@@ -8,6 +20,12 @@ class Reg02MaininfoSerializer(serializers.HyperlinkedModelSerializer):
         view_name='district-detail',
         read_only=True,
         lookup_field='maindistrict_des'
+    )
+    reg04maininfo = serializers.HyperlinkedIdentityField(
+        view_name='animalregistration-detail',
+        many=True,
+        read_only=True,
+        lookup_field='hh'
     )
 
     class Meta:

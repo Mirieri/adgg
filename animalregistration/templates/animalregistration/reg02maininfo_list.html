@@ -69,7 +69,7 @@
             </form>
           {% endif %}
         </div>
-        <div role="tabpanel" class="tab-pane active" id="table">
+        <div role="tabpanel" class="tab-pane active" id="table" class="table-responsive">
           <p>There are {{ reg02maininfo_list|length }} entries in the table.</p>
           {% render_table table %}
         </div>
@@ -100,13 +100,19 @@
   </script>
 
   <script>
-    $('#tabs > ul.nav > li[role="presentation"] > a').click(function (e) {
-      e.preventDefault()
-      $(this).tab('show')
-    });
-    $( function() {
+    ( function ($) {
+      // tabs
+      $('#tabs > ul.nav > li[role="presentation"] > a').click(function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+      });
+      // datepicker
       $( ".datepicker" ).datepicker();
-  } );
+      // stack form
+      $('.form-group').each(function () {
+        $(this).addClass('col-lg-4 col-md-4 col-sm-6 col-xs-12');
+      });
+    })(jQuery);
   </script>
 </body>
 </html>

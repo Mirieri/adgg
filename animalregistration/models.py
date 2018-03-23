@@ -1,23 +1,17 @@
 from django.db import models
+from django.utils.functional import cached_property
+
+from . import constants
 
 
 class Reg02Maininfo(models.Model):
-    ENUMTYPE = (
-        (1, 'Artificial Insemination Technician'),
-        (2, 'ADGG data collector')
-    ) 
-    ENUMTYPE_GENDER = (
-        (1, 'Male'),
-        (2, 'Female')
-    )
- 
     surveyid = models.CharField(max_length=80, blank=True, null=True)
     originid = models.CharField(max_length=15, blank=True, null=True)
     start_time = models.DateTimeField(blank=True, null=True)
     end_time = models.DateTimeField(blank=True, null=True)
     deviceid = models.CharField(max_length=60, blank=True, null=True)
     regdate = models.DateTimeField(verbose_name='Registration Date', blank=True, null=True)
-    enumtype = models.CharField(max_length=1, db_column='enumtype', blank=True, null=True, choices=ENUMTYPE)
+    enumtype = models.CharField(max_length=1, db_column='enumtype', blank=True, null=True, choices=constants.ENUMTYPE)
     #aitechid = models.ForeignKey('Reg01Maininfo', models.DO_NOTHING, db_column='aitechid', blank=True, null=True)
     #datacollid = models.ForeignKey('Reg01BMaininfo', models.DO_NOTHING, db_column='datacollid', blank=True, null=True)
     #hh_country = models.ForeignKey('Reg01LkphhCountry', models.DO_NOTHING, db_column='hh_country', blank=True, null=True)
@@ -33,14 +27,14 @@ class Reg02Maininfo(models.Model):
     #farmerrltshiphhoth = models.ForeignKey('Reg02Lkpfarmerrltshiphhoth', models.DO_NOTHING, db_column='farmerrltshiphhoth', blank=True, null=True)
     hhhname = models.TextField(verbose_name='House Hold Name',blank=True, null=True)
     hhhmobile = models.CharField(verbose_name='House Hold Mobile',max_length=60, blank=True, null=True)
-    hhhgender = models.CharField(verbose_name='House Hold Gender',max_length=1, db_column='hhhgender', blank=True, null=True, choices=ENUMTYPE_GENDER)
+    hhhgender = models.CharField(verbose_name='House Hold Gender',max_length=1, db_column='hhhgender', blank=True, null=True, choices=constants.ENUMTYPE_GENDER)
     #hhhage = models.ForeignKey('Reg02Lkpfarmerage', models.DO_NOTHING, db_column='hhhage', blank=True, null=True)
     nmale0to5 = models.IntegerField(verbose_name='Number of males 0 to 5', blank=True, null=True)
     nfem0to5 = models.IntegerField(verbose_name='Number of females 0 to 5', blank=True, null=True)
     nmale6to14 = models.IntegerField(verbose_name='Number of males 6 to 14', blank=True, null=True)
     nfem6to14 = models.IntegerField(verbose_name='Number of females 6 to 14', blank=True, null=True)
     nmale15to64 = models.IntegerField(verbose_name='Number of males 15 to 64', blank=True, null=True)
-    nfem15to64 = models.IntegerField(verbose_name='Number of males 15 to 64', blank=True, null=True)
+    nfem15to64 = models.IntegerField(verbose_name='Number of females 15 to 64', blank=True, null=True)
     nmaleo65 = models.IntegerField(verbose_name='Number of males above 65', blank=True, null=True)
     nfemo65 = models.IntegerField(verbose_name='Number of males above 65', blank=True, null=True)
     members_no = models.IntegerField(blank=True, null=True)
@@ -65,6 +59,20 @@ class Reg02Maininfo(models.Model):
     class Meta:
         managed = False
         db_table = 'reg02_maininfo'
+        
+    @cached_property
+    def animals_categories_numbers(self):
+        if self.animcatowned is not None:
+            return self.animcatowned.split(' ')
+        return None
+
+    @cached_property
+    def animals_categories_owned(self):
+        d = dict(constants.ANIMAL_CATEGORIES)
+        category_numbers = self.animals_categories_numbers
+        if category_numbers is not None:
+            return [d[number] for number in category_numbers]
+        return None
 
 
 class Reg01Lkpmaindistrict(models.Model):
@@ -79,3 +87,24 @@ class Reg01Lkpmaindistrict(models.Model):
 
     def __str__(self):
         return self.maindistrict_des
+
+
+class Reg04Maininfo(models.Model):
+    surveyid = models.CharField(max_length=80, blank=True, null=True)
+    originid = models.CharField(max_length=15, blank=True, null=True)
+    start_time = models.DateTimeField(blank=True, null=True)
+    end_time = models.DateTimeField(blank=True, null=True)
+    deviceid = models.CharField(max_length=60, blank=True, null=True)
+   # enumtype = models.ForeignKey('Reg02Lkpenumtype', models.DO_NOTHING, db_column='enumtype', blank=True, null=True)
+   # aitechid = models.ForeignKey('Reg01Maininfo', models.DO_NOTHING, db_column='aitechid', blank=True, null=True)
+   # datacollid = models.ForeignKey('Reg01BMaininfo', models.DO_NOTHING, db_column='datacollid', blank=True, null=True)
+    hh = models.ForeignKey('Reg02Maininfo', models.DO_NOTHING, primary_key=True, related_name='reg04maininfo')
+    regdate = models.DateField()
+    animregis = models.IntegerField(blank=True, null=True)
+    gpsloc = models.CharField(max_length=60, blank=True, null=True)
+    rowuuid = models.CharField(max_length=80, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'reg04_maininfo'
+        unique_together = (('hh', 'regdate'),)

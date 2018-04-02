@@ -16,11 +16,11 @@ class Reg02Maininfo(models.Model):
     #datacollid = models.ForeignKey('Reg01BMaininfo', models.DO_NOTHING, db_column='datacollid', blank=True, null=True)
     #hh_country = models.ForeignKey('Reg01LkphhCountry', models.DO_NOTHING, db_column='hh_country', blank=True, null=True)
     #hh_region = models.ForeignKey('Reg01LkphhRegion', models.DO_NOTHING, db_column='hh_region', blank=True, null=True)
-    hh_district = models.ForeignKey('Reg01Lkpmaindistrict', models.DO_NOTHING, db_column='hh_district', blank=True, null=True)
+    hh_district = models.ForeignKey('Reg01Lkpmaindistrict', models.DO_NOTHING, db_column='hh_district', blank=True, null=True, verbose_name='District')
     #hh_kebele = models.ForeignKey('Reg01Lkpmainwards', models.DO_NOTHING, db_column='hh_kebele', blank=True, null=True)
     #hh_village = models.ForeignKey('Reg02LkphhVillage', models.DO_NOTHING, db_column='hh_village', blank=True, null=True)
-    farmername = models.TextField(verbose_name='Farmer Name', blank=True, null=True)
-    farmermobile = models.CharField(primary_key=True, max_length=60)
+    farmername = models.TextField(verbose_name='Farmer Full Name', blank=True, null=True)
+    farmermobile = models.CharField(primary_key=True, max_length=60, verbose_name='Farmer Mobile Number')
     #farmergender = models.ForeignKey('Reg01Lkptechgender', models.DO_NOTHING, db_column='farmergender', blank=True, null=True)
     #farmerage = models.ForeignKey('Reg02Lkpfarmerage', models.DO_NOTHING, db_column='farmerage', blank=True, null=True)
     farmerhhhead = models.IntegerField(verbose_name='Farmer household head', blank=True, null=True)
@@ -47,7 +47,7 @@ class Reg02Maininfo(models.Model):
     totanim = models.CharField(verbose_name='Total animals', max_length=255, blank=True, null=True)
     animcatowned = models.CharField(max_length=13, blank=True, null=True)
     hhproblems = models.CharField(verbose_name='House hold problems', max_length=22, blank=True, null=True)
-    hhproblemsoth = models.TextField(blank=True, null=True)
+    hhproblemsoth = models.TextField(verbose_name='Other House Hold Problems',blank=True, null=True)
     gpsloc = models.CharField(verbose_name='GPS location',max_length=60, blank=True, null=True)
     rowuuid = models.CharField(max_length=80, blank=True, null=True)
     welcomesent = models.IntegerField(blank=True, null=True)
@@ -65,13 +65,27 @@ class Reg02Maininfo(models.Model):
         if self.animcatowned is not None:
             return self.animcatowned.split(' ')
         return None
-
+    
     @cached_property
     def animals_categories_owned(self):
         d = dict(constants.ANIMAL_CATEGORIES)
         category_numbers = self.animals_categories_numbers
         if category_numbers is not None:
             return [d[number] for number in category_numbers]
+        return None
+   
+    @cached_property
+    def house_hold_problem_numbers(self):
+        if self.hhproblems is not None:
+            return self.hhproblems.split(' ')
+        return None
+    
+    @cached_property
+    def house_hold_problems(self):
+        d = dict(constants.HOUSE_HOLD_PROBLEMS)
+        problem_number = self.house_hold_problem_numbers
+        if problem_number is not None:
+            return [d[number] for number in problem_number]
         return None
 
 

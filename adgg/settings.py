@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_tables2',
     'django_filters',
+    'leaflet',
+    'djgeojson',
     'crispy_forms', 
     'rest_framework',
     'animalregistration',

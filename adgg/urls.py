@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from djgeojson.views import GeoJSONLayerView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('animalregistration.urls'))
+    path('', include('animalregistration.urls')),
+#    path('map/',GeoJSONLayerView.as_view(model=Reg02Maininfo, properties=('farmername','farmermobile','gpsloc')), name='adggmaps')
 ]

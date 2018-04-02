@@ -1,4 +1,5 @@
 from django.urls import path, include
+from djgeojson.views import GeoJSONLayerView
 
 from rest_framework import routers
 
@@ -12,5 +13,7 @@ router.register('animalregistration', views.Reg04MaininfoViewSet, base_name='ani
 urlpatterns = [
     path('api/', include(router.urls)),
     path('', views.Reg02MaininfoView.as_view(), name='animalmaininfo')
+   # path('map/' GeoJSONLayerView.as_view(model=Reg02Maininfo, properties=('farmername','farmermobile','gpsloc'),name='adggmaps'))
+    
 ]
 

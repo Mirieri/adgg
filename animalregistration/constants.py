@@ -18,4 +18,18 @@ ANIMAL_CATEGORIES = (
     ('6', 'Female calves'),
     ('7', 'Male calves'),
 )
- 
+
+HOUSE_HOLD_PROBLEMS = (
+    ('-66', 'Other'),
+    ('1', 'Diseases'),
+    ('2', 'Low producton'),
+    ('3', 'Poor sales'),
+    ('4', 'Lack of information'),
+    ('5', 'Lack of feed'),
+    ('6', 'Lack of water'),
+    ('7', 'Lack of proper breeds'),
+    ('8', 'High price of feed'),
+    ('9', 'No problems or challenges'),
+    ('10', 'No problems or challenges'),
+    ('11', 'Other specify'),
+)

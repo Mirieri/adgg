@@ -110,18 +110,26 @@
   </script>
 
   <script>
-    // center the map to Nairobi (longitude 1.28 S, latitude 36.82 E)
-    var mymap = L.map('mapid').setView([-1.28, 36.82], 13);
-    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
-      {
-        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-        maxZoom:18,
-        id:'mapbox.streets',
-        accessToken: 'pk.eyJ1IjoiY2V6YXJwZW5kYXJvdnNraSIsImEiOiJjajlvNWMyaWE1Y3BiMnFucnRuOXp2MzJ4In0.cnFLASbZTkfE7mh56YNn5w'
-      }  
-    ).addTo(mymap);
-
     ( function ($) {
+      // center the map to Nairobi (longitude 1.28 S, latitude 36.82 E)
+      var mymap = L.map('mapid').setView([-1.28, 36.82], 13);
+      
+      // draw map
+      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
+        {
+          attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+          maxZoom:18,
+          id:'mapbox.streets',
+          accessToken: 'pk.eyJ1IjoiY2V6YXJwZW5kYXJvdnNraSIsImEiOiJjajlvNWMyaWE1Y3BiMnFucnRuOXp2MzJ4In0.cnFLASbZTkfE7mh56YNn5w'
+        }  
+      ).addTo(mymap);
+
+      // add markers to the map
+      $('.point').each(function() {
+        var point = JSON.parse($(this).val());
+        var marker = L.geoJSON(point).addTo(mymap);
+      });
+
       // tabs
       $('#tabs > ul.nav > li[role="presentation"] > a').click(function (e) {
         e.preventDefault()

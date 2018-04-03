@@ -4,6 +4,11 @@ from .models import Reg02Maininfo
 
 
 class Reg02MaininfoTable(tables.Table):
+    gpsloc = tables.TemplateColumn(
+        verbose_name='GPS location',
+        template_name='animalregistration/gpsloc_column.html'
+    )
+
     class Meta:
         model = Reg02Maininfo
         template_name = 'animalregistration/bootstrap-responsive.html'

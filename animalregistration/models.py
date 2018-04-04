@@ -1,3 +1,5 @@
+import json
+
 from django.db import models
 from django.utils.functional import cached_property
 
@@ -88,6 +90,32 @@ class Reg02Maininfo(models.Model):
             return [d[number] for number in problem_number]
         return None
 
+    @cached_property
+    def gps_location(self):
+        result = {}
+        if self.gpsloc:
+            values = self.gpsloc.split(' ')
+            if len(values) == 4:
+                result['longitude'] = values[0]
+                result['latitude'] = values[1]
+                result['altitude'] = values[2]
+                result['accuracy'] = values[3]
+            else:
+                raise ValueError(
+                    'The record {} has less than 4 values.'.format(self.gpsloc)
+                )
+        return result
+
+    @cached_property
+    def geojson(self):
+        result = {
+            'type': 'Point',
+            'coordinates': [
+                self.gps_location['longitude'],
+                self.gps_location['latitude']
+            ]
+        }
+        return json.dumps(result)
 
 class Reg01Lkpmaindistrict(models.Model):
     maindistrict_cod = models.IntegerField(primary_key=True)

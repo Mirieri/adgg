@@ -1,0 +1,6 @@
+<div>
+  {% for k,v in record.gpslocation %}
+    <p><strong>{{ k }}</strong>: {{ v }}</p>
+  {% endfor %}
+  <input type="hidden" value="{{ record.geojson }}" class="point">
+</div>

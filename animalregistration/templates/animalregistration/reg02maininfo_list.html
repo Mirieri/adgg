@@ -39,9 +39,10 @@
       background-color: #DCDCDC;
     }
 
-    #map {
-      height: 800px;
+    #mapid {
+      height: 640px;
     }
+
   </style>
 </head>
 <body>
@@ -81,6 +82,7 @@
         </div>
 
         <div role='tabpanel' class="tab-pane" id="map">
+          <div id="mapid"></div>
         </div>
       </div> <!-- end div class="tab-content" -->
     </div> <!-- end div class="row" id="tabs" -->
@@ -112,28 +114,30 @@
   <script>
     ( function ($) {
       // center the map to Nairobi (longitude 1.28 S, latitude 36.82 E)
-      var mymap = L.map('mapid').setView([-1.28, 36.82], 13);
+      var mymap = L.map('mapid', {minZoom: 1}).setView([-1.28, 36.82], 7);
       
       // draw map
       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
         {
           attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+          ZoomOffset: 1,
           maxZoom:18,
           id:'mapbox.streets',
           accessToken: 'pk.eyJ1IjoiY2V6YXJwZW5kYXJvdnNraSIsImEiOiJjajlvNWMyaWE1Y3BiMnFucnRuOXp2MzJ4In0.cnFLASbZTkfE7mh56YNn5w'
         }  
       ).addTo(mymap);
 
-      // add markers to the map
-      $('.point').each(function() {
-        var point = JSON.parse($(this).val());
-        var marker = L.geoJSON(point).addTo(mymap);
-      });
+      //// add markers to the map
+      //$('.point').each(function() {
+      //  var point = JSON.parse($(this).val());
+      //  var marker = L.geoJSON(point).addTo(mymap);
+      //});
 
       // tabs
       $('#tabs > ul.nav > li[role="presentation"] > a').click(function (e) {
-        e.preventDefault()
-        $(this).tab('show')
+        e.preventDefault();
+        $(this).tab('show');
+        mymap.invalidateSize(true);
       });
       // datepicker
       $( ".datepicker" ).datepicker();

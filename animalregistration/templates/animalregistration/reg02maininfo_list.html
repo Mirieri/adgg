@@ -114,7 +114,7 @@
   <script>
     ( function ($) {
       // center the map to Nairobi (longitude 1.28 S, latitude 36.82 E)
-      var mymap = L.map('mapid', {minZoom: 1}).setView([-1.28, 36.82], 7);
+      var mymap = L.map('mapid', {minZoom: 1}).setView([-1.28, 36.82], 5);
       
       // draw map
       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
@@ -127,24 +127,27 @@
         }  
       ).addTo(mymap);
 
-      //// add markers to the map
-      //$('.point').each(function() {
-      //  var point = JSON.parse($(this).val());
-      //  var marker = L.geoJSON(point).addTo(mymap);
-      //});
-
       // tabs
       $('#tabs > ul.nav > li[role="presentation"] > a').click(function (e) {
         e.preventDefault();
         $(this).tab('show');
         mymap.invalidateSize(true);
       });
+
       // datepicker
       $( ".datepicker" ).datepicker();
       // stack form
       $('.form-group').each(function () {
         $(this).addClass('col-lg-4 col-md-4 col-sm-6 col-xs-12');
       });
+
+      // add markers to the map
+      var points = [];
+      $('.point').each(function() {
+        var point = JSON.parse($(this).val());
+        points.push(point);
+      });
+      L.geoJSON(points).addTo(mymap);
     } )( jQuery );
   </script>
 </body>

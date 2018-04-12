@@ -96,10 +96,10 @@ class Reg02Maininfo(models.Model):
         if self.gpsloc:
             values = self.gpsloc.split(' ')
             if len(values) == 4:
-                result['longitude'] = values[0]
-                result['latitude'] = values[1]
-                result['altitude'] = values[2]
-                result['accuracy'] = values[3]
+                result['longitude'] = float(values[0])
+                result['latitude'] = float(values[1])
+                result['altitude'] = float(values[2])
+                result['accuracy'] = float(values[3])
             else:
                 raise ValueError(
                     'The record {} has less than 4 values.'.format(self.gpsloc)
@@ -108,14 +108,16 @@ class Reg02Maininfo(models.Model):
 
     @cached_property
     def geojson(self):
-        result = {
-            'type': 'Point',
-            'coordinates': [
-                self.gps_location['longitude'],
-                self.gps_location['latitude']
-            ]
-        }
-        return json.dumps(result)
+        if self.gps_location:
+            result = {
+                'type': 'Point',
+                'coordinates': [
+                    self.gps_location['latitude'],
+                    self.gps_location['longitude']
+                ]
+            }
+            return json.dumps(result)
+        return None
 
 class Reg01Lkpmaindistrict(models.Model):
     maindistrict_cod = models.IntegerField(primary_key=True)
